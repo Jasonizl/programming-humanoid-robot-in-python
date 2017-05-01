@@ -16,7 +16,10 @@ class MyAgent(SparkAgent):
     def think(self, perception):
         action = super(MyAgent, self).think(perception)
         # YOUR CODE HERE
-
+        # action.speed = {'(he1 0.1)'}
+        action.stiffness = {'LShoulderPitch': 0.0} # Left shoulder down
+        action.speed = {'HeadYaw': 0.1} # head moves slowly left (invert value for right)
+        
         return action
 
 if '__main__' == __name__:
