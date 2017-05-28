@@ -33,11 +33,12 @@ class PIDController(object):
         self.u = np.zeros(size)
         self.e1 = np.zeros(size)
         self.e2 = np.zeros(size)
+        self.e3 = np.zeros(size) # introduced to value error for D_Term of PID
         # ADJUST PARAMETERS BELOW
         delay = 0
-        self.Kp = 0
-        self.Ki = 0
-        self.Kd = 0
+        self.Kp = 0.01
+        self.Ki = 0.01
+        self.Kd = 0.02
         self.y = deque(np.zeros(size), maxlen=delay + 1)
 
     def set_delay(self, delay):
@@ -53,7 +54,38 @@ class PIDController(object):
         @return control signal
         '''
         # YOUR CODE HERE
-
+        # works kinda?
+        """if(self.u[0] < sensor[0]):
+            self.u = self.u + (target[0] * self.dt)
+        else:
+            self.u = self.u + (target[0] * self.dt) * -1.0"""
+        
+        # doesn't work
+        """self.u = self.u + (self.Kp + self.Ki + self.Kd/target[0])*self.e1[0] - (self.Kp + 2*self.Kd/target[0])* self.e2 + (self.Kd/target[0])*self.e2[0]"""
+        
+        """if(sensor[0] > target[0]): # this is clever
+            self.u[0] = self.u[0] - (target[0] * self.dt)
+        else:      
+            self.u[0] = self.u[0] + (target[0] * self.dt)
+        print self.e1"""
+        
+        # hardly oriented on coder-tronics.com/pid-tutorial-c-code-example-pt2/
+        
+        self.e1 = target - sensor # Get error 
+        P = self.Kp * self.e1
+        
+        self.e2 += self.e1
+        """if(self.e2[0] > 2): further investigation needed to why I dont need this
+            self.e2[0] = 2
+        elif(self.e2[0] < -2):
+            self.e2[0] = -2"""
+        I = self.Ki * self.e2
+        
+        D = self.Kd * (self.e3 - self.e1)
+        self.e3 = self.e1
+        
+        self.u = target + (P + I + D)
+        
         return self.u
 
 

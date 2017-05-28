@@ -22,6 +22,7 @@
 
 from pid import PIDAgent
 from keyframes import hello
+import sys
 
 
 class AngleInterpolationAgent(PIDAgent):
@@ -41,7 +42,11 @@ class AngleInterpolationAgent(PIDAgent):
     def angle_interpolation(self, keyframes, perception):
         target_joints = {}
         # YOUR CODE HERE
-
+        print keyframes
+        print "--------------PERCEOTPIRON-----------------"
+        print perception
+        sys.exit()
+        
         return target_joints
 
 if __name__ == '__main__':
