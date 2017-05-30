@@ -34,8 +34,12 @@ class AngleInterpolationAgent(PIDAgent):
                  sync_mode=True):
         super(AngleInterpolationAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
         self.keyframes = ([], [], [])
+        self.timePoint = np.zeros(14, dtype=int)
         self.isInterpolated = False
         self.spline = []
+        self.startTime = -1
+        self.currentTime = -1
+        self.endTime = -1
 
     def think(self, perception):
         target_joints = self.angle_interpolation(self.keyframes, perception)
@@ -54,9 +58,32 @@ class AngleInterpolationAgent(PIDAgent):
         # (6.   check if we have ot apply because time is right now?)
 
         if (self.isInterpolated):
+
+            # update time
+            if(self.startTime == -1):
+                self.startTime = perception.time
+
+            self.currentTime = perception.time
+
+            dif = self.currentTime - self.startTime
+
+            if( dif > 4.77):
+                target_joints = perception.joint
+                return target_joints
+
+            # update every joint in keyframe
             for i in range(len(keyframes[0])):
-                target_joints[keyframes[0][i]] = 0.5 # actually works and he spins his arm
-                # TODO update value according to time
+                if(dif > keyframes[1][i][self.timePoint[i]]):
+                    if(len(keyframes[1][i])-1 > self.timePoint[i] + 1):
+                        self.timePoint[i] += 1
+                if np.max(keyframes[1][i]) < dif:
+                    target_joints[keyframes[0][i]] = 0
+                else:
+                    target_joints[keyframes[0][i]] = self.spline[i][self.timePoint[i]](keyframes[1][i][self.timePoint[i]]) # actually works and he spins his arm
+                    
+
+            # somehow the interpolated values don't seem to work but the interpolation should be right
+
 
             return target_joints
 
