@@ -36,9 +36,12 @@ class PIDController(object):
         self.e3 = np.zeros(size) # introduced to value error for D_Term of PID
         # ADJUST PARAMETERS BELOW
         delay = 0
-        self.Kp = 0.01
-        self.Ki = 0.01
-        self.Kd = 0.02
+        #self.Kp = 0.01
+        #self.Ki = 0.01
+        #self.Kd = 0.02
+        self.Kp = 9
+        self.Ki = 0.5
+        self.Kd = 1
         self.y = deque(np.zeros(size), maxlen=delay + 1)
 
     def set_delay(self, delay):
@@ -75,10 +78,6 @@ class PIDController(object):
         P = self.Kp * self.e1
         
         self.e2 += self.e1
-        """if(self.e2[0] > 2): further investigation needed to why I dont need this
-            self.e2[0] = 2
-        elif(self.e2[0] < -2):
-            self.e2[0] = -2"""
         I = self.Ki * self.e2
         
         D = self.Kd * (self.e3 - self.e1)

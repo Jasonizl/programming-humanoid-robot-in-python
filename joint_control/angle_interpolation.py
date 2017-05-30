@@ -21,7 +21,7 @@
 
 
 from pid import PIDAgent
-from keyframes import hello
+from keyframes import hello, wipe_forehead
 import numpy as np
 import sys
 
@@ -54,7 +54,7 @@ class AngleInterpolationAgent(PIDAgent):
         # 2.    On every keyframe, circle through all times [Works]
         # 3.    interpolation in this part [Works]
         # 4.    extract coefficients from spline [Works]
-        # 5.    calculate interpolated value for specific time
+        # 5.    calculate interpolated value for specific time [works]
         # (6.   check if we have ot apply because time is right now?)
 
         if (self.isInterpolated):
@@ -66,11 +66,7 @@ class AngleInterpolationAgent(PIDAgent):
             self.currentTime = perception.time
 
             dif = self.currentTime - self.startTime
-
-            if( dif > 4.77):
-                target_joints = perception.joint
-                return target_joints
-
+            
             # update every joint in keyframe
             for i in range(len(keyframes[0])):
                 if(dif > keyframes[1][i][self.timePoint[i]]):
@@ -79,11 +75,7 @@ class AngleInterpolationAgent(PIDAgent):
                 if np.max(keyframes[1][i]) < dif:
                     target_joints[keyframes[0][i]] = 0
                 else:
-                    target_joints[keyframes[0][i]] = self.spline[i][self.timePoint[i]](keyframes[1][i][self.timePoint[i]]) # actually works and he spins his arm
-                    
-
-            # somehow the interpolated values don't seem to work but the interpolation should be right
-
+                    target_joints[keyframes[0][i]] = self.spline[i][self.timePoint[i]](dif)
 
             return target_joints
 
