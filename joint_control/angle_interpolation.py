@@ -21,9 +21,8 @@
 
 
 from pid import PIDAgent
-from keyframes import hello, wipe_forehead
+from keyframes import hello
 import numpy as np
-import sys
 
 
 class AngleInterpolationAgent(PIDAgent):
@@ -34,7 +33,7 @@ class AngleInterpolationAgent(PIDAgent):
                  sync_mode=True):
         super(AngleInterpolationAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
         self.keyframes = ([], [], [])
-        self.timePoint = np.zeros(14, dtype=int)
+        self.timePoint = 0
         self.isInterpolated = False
         self.spline = []
         self.startTime = -1
@@ -57,8 +56,10 @@ class AngleInterpolationAgent(PIDAgent):
         # 5.    calculate interpolated value for specific time [works]
         # (6.   check if we have ot apply because time is right now?)
 
-        if (self.isInterpolated):
+        if self.spline == [] and self.timePoint == 0:
+            self.timePoint = np.zeros(len(keyframes[0]), dtype=int)
 
+        if (self.isInterpolated):
             # update time
             if(self.startTime == -1):
                 self.startTime = perception.time
@@ -69,8 +70,8 @@ class AngleInterpolationAgent(PIDAgent):
             
             # update every joint in keyframe
             for i in range(len(keyframes[0])):
-                if(dif > keyframes[1][i][self.timePoint[i]]):
-                    if(len(keyframes[1][i])-1 > self.timePoint[i] + 1):
+                if dif > keyframes[1][i][self.timePoint[i]]:
+                    if len(keyframes[1][i])-1 > self.timePoint[i] + 1:
                         self.timePoint[i] += 1
                 if np.max(keyframes[1][i]) < dif:
                     target_joints[keyframes[0][i]] = 0
