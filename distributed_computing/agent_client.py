@@ -7,6 +7,7 @@
 '''
 
 import weakref
+import xmlrpclib
 
 class PostHandler(object):
     '''the post hander wraps function to be excuted in paralle
@@ -29,15 +30,22 @@ class ClientAgent(object):
     # YOUR CODE HERE
     def __init__(self):
         self.post = PostHandler(self)
-    
+        self.MyProxy = xmlrpclib.ServerProxy("http://localhost:9000") # connect to server
+
     def get_angle(self, joint_name):
         '''get sensor value of given joint'''
         # YOUR CODE HERE
-    
+        retVal = self.MyProxy.get_angle(joint_name)
+        if retVal != None:
+            print retVal
+
     def set_angle(self, joint_name, angle):
         '''set target angle of joint for PID controller
         '''
         # YOUR CODE HERE
+        retVal = self.MyProxy.set_angle(joint_name, angle)
+        if retVal != None:
+            print retVal
 
     def get_posture(self):
         '''return current posture of robot'''
@@ -62,5 +70,14 @@ class ClientAgent(object):
 if __name__ == '__main__':
     agent = ClientAgent()
     # TEST CODE HERE
+    # get_angle
+    agent.get_angle("HeadPitch")  # should return inital value 0
+    agent.get_angle("HeadHeadHead")  # should return error
+
+    # set_angle
+    agent.set_angle("HeadPitch", 0.5)  # should set angle of HeadPitch
+    agent.set_angle("HeadHeadHead", 0.5)  # should not work
+    agent.get_angle("HeadPitch")  # should return ~ 0.5
+
 
 

@@ -1,7 +1,7 @@
 '''
 In this exercise you need to know how to get sensor data.
 
-* Task: get the current joint angle and temperature of joint HeadYaw
+* Task: get the current joint angle and tempeture of joint HeadYaw
 
 * Hint: The current sensor data of robot are store in perception (class Perception in spark_agent.py)
 
@@ -13,11 +13,14 @@ from spark_agent import SparkAgent
 class MyAgent(SparkAgent):
     def think(self, perception):
         angle = 0
-        temperature = 0
-        # YOUR CODE HERE
-        # get angle and temperature to current data of joint HeadYaw
+        tempeture = 0
 
-        print 'HeadYaw angle: ' + str(angle) + ' temperature: ' + str(temperature)
+        # set angle and tempeture to current data of joint HeadYaw
+        # perception.joint_temperature['JOINT'] gets us temperature of wanted joint
+        tempeture = perception.joint_temperature['HeadYaw']
+        angle = perception.joint['HeadYaw'] # - 0.0 ?
+
+        print 'HeadYaw angle: ' + str(angle) + ' tempeture: ' + str(tempeture)
         return super(MyAgent, self).think(perception)
 
 if '__main__' == __name__:
