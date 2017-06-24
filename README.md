@@ -5,6 +5,8 @@ Source code for [Programming Humanoid Robot in Python](http://www.dainamite.de/p
 
 1. [Introduction](./introduction)
 2. [Joint Control](./joint_control)
+3. [Kinematics](./kinematics)
+4. [Distributed Computing](./distributed_computing)
 
 ## How to submit your exercise?
 ### inital setup
@@ -17,7 +19,7 @@ Source code for [Programming Humanoid Robot in Python](http://www.dainamite.de/p
   ```
 
 ### update in following weeks
-This repo is work in progress, please make git pull before doing exercise every week.
+This repo is work in progress, please [sync git](https://help.github.com/articles/syncing-a-fork/) before doing exercise every week.
 
 ### program and submit
 
