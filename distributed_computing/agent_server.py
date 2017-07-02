@@ -31,6 +31,7 @@ class ServerAgent(InverseKinematicsAgent):
         retVal = self.target_joints.get(joint_name)
         if retVal == None:
             return "Joint not found."
+
         return retVal
     
     def set_angle(self, joint_name, angle):
@@ -45,22 +46,31 @@ class ServerAgent(InverseKinematicsAgent):
     def get_posture(self):
         '''return current posture of robot'''
         # YOUR CODE HERE
+        post = self.recognize_posture(self.perception)
+        return str(post)
 
     def execute_keyframes(self, keyframes):
         '''excute keyframes, note this function is blocking call,
         e.g. return until keyframes are executed
         '''
         # YOUR CODE HERE
+        self.angle_interpolation(keyframes, self.perception)
+        return
 
     def get_transform(self, name):
         '''get transform with given name
         '''
         # YOUR CODE HERE
+        transform = self.chains[name]
+        if transform == None:
+            return "No transform with given name."
+        return str(transform)
 
     def set_transform(self, effector_name, transform):
         '''solve the inverse kinematics and control joints use the results
         '''
         # YOUR CODE HERE
+        self.InverseKinematicsAgent.set_transforms(effector_name, transform)
 
 
 if __name__ == '__main__':
