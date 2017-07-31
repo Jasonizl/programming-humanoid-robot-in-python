@@ -70,7 +70,8 @@ class ServerAgent(InverseKinematicsAgent):
         '''solve the inverse kinematics and control joints use the results
         '''
         # YOUR CODE HERE
-        self.InverseKinematicsAgent.set_transforms(effector_name, transform)
+        keyframes = self.set_transforms(self, effector_name, transform)
+        self.execute_keyframes(keyframes)
 
 
 if __name__ == '__main__':

@@ -21,13 +21,13 @@ class PostHandler(object):
     def execute_keyframes(self, keyframes):
         '''non-blocking call of ClientAgent.execute_keyframes'''
         # YOUR CODE HERE
-        thread = threading.Thread(target=self.proxy.execute_keyframes(keyframes))
+        thread = threading.Thread(target=self.proxy.execute_keyframes, args=[keyframes])
         thread.start()  # starts new thread and doesn't block further input
 
     def set_transform(self, effector_name, transform):
         '''non-blocking call of ClientAgent.set_transform'''
         # YOUR CODE HERE
-        thread = threading.Thread(target=self.proxy.set_transform(effector_name, transform))
+        thread = threading.Thread(target=self.proxy.set_transform, args=[effector_name, transform])
         thread.start()  # starts new thread and doesn't block further input
 
 
@@ -82,6 +82,8 @@ class ClientAgent(object):
 
 
 if __name__ == '__main__':
+
+
     agent = ClientAgent()
     # TEST CODE HERE
     # get_angle
